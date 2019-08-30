@@ -1,0 +1,3 @@
+/home/fernando/github/dice_game-cpp/CMakeFiles/rebuild_cache.dir
+/home/fernando/github/dice_game-cpp/CMakeFiles/dice_game.dir
+/home/fernando/github/dice_game-cpp/CMakeFiles/edit_cache.dir
