@@ -1,8 +1,11 @@
-//TODO: Main switching players bug fix
+// TODO: Main switching players bug fix
 #include <cstdint>   //to access fixed-width integers
 #include <cstdlib>   //to access rand and srand
 #include <ctime>     //for "time" function
 #include <iostream>  //for cin and cout
+
+// Not using OOP Classes because I'm using this project to test my skills using
+// structs and enums
 
 // Libraries from C that are still useful in C++ were given a "c" prefix.
 // stdlib.h became cstdlib
@@ -55,15 +58,10 @@ int main() {
 
         printWelcome();
 
-        while (true) {
-                // end condition is if someone gets the total score to be 100 or
-                // higher.
-                if (player.totalScore >= 100) {
-                        std::cout << "Player" << getPlayerNumber(player)
-                                  << "wins!";
-                        return 0;
-                }
-
+        // The end condition of the while loop is if someone gets the total
+        // score to be 100 or higher (which means "continue with the loop until
+        // there is a winner")
+        while (player.totalScore < 100) {
                 std::cout << "1 - Throw\n2 - Stand\n";
                 std::cin >> choice;
 
@@ -81,6 +79,19 @@ int main() {
                         if (dieValue == 1) {
                                 player.partialScore = 0;
                                 std::cout << "Skipping turn\n";
+                                // Now all we have to do is switch players
+                                // replace this with togglePlayer(player); once
+                                // it is ready to be used
+                                switch (player.number) {
+                                        case PlayerNumber::ONE:
+                                                player.number =
+                                                    PlayerNumber::TWO;
+                                                break;
+                                        case PlayerNumber::TWO:
+                                                player.number =
+                                                    PlayerNumber::ONE;
+                                                break;
+                                }
                         } else {
                                 // once the die has been thrown and its value
                                 // isn't 1, add its value to the partial score
@@ -96,22 +107,24 @@ int main() {
                         // and of course after doing this we have to reset his
                         // score
                         player.partialScore = 0;
-                }
 
-                std::cout << "Switching players\n";
-                //fazer isso na verdade só se o cara der stand ou rodar um 1. Resolver isso depois.
-
-                // togglePlayer(player);
-                // delete this switch once togglePlayer is ready
-                switch (player.number) {
-                        case PlayerNumber::ONE:
-                                player.number = PlayerNumber::TWO;
-                                break;
-                        case PlayerNumber::TWO:
-                                player.number = PlayerNumber::ONE;
-                                break;
+                        // Now all we have to do is switch players
+                        std::cout << "Switching players\n";
+                        // replace this with togglePlayer(player); once it is
+                        // ready to be used
+                        switch (player.number) {
+                                case PlayerNumber::ONE:
+                                        player.number = PlayerNumber::TWO;
+                                        break;
+                                case PlayerNumber::TWO:
+                                        player.number = PlayerNumber::ONE;
+                                        break;
+                        }
                 }
         }
+        // At this point, there is a winner since the while loop condition is
+        // now false.
+        std::cout << "Player" << getPlayerNumber(player) << "wins!";
 
         return 0;
 }
