@@ -1,3 +1,4 @@
+//TODO: Main switching players bug fix
 #include <cstdint>   //to access fixed-width integers
 #include <cstdlib>   //to access rand and srand
 #include <ctime>     //for "time" function
@@ -26,7 +27,7 @@ struct Player {
  * @param player current player. Doing this because non-const global variables
  * are evil.
  */
-void togglePlayer(Player player);
+// void togglePlayer(Player player); //pointers or reference needed
 /**
  * A function that gets the PlayerNumber value as a string (instead of values
  * ONE and TWO, we get "ONE" and "TWO")
@@ -66,17 +67,26 @@ int main() {
                 std::cout << "1 - Throw\n2 - Stand\n";
                 std::cin >> choice;
 
+                std::cout << "player" << getPlayerNumber(player)
+                          << " (Total: " << player.totalScore
+                          << "; Partial: " << player.partialScore << ")";
+
                 if (choice == 1) {
                         // once the user chooses to throw a dice, the die value
                         // should now be assigned a random value.
                         dieValue = (std::rand() % 6) + 1;
 
-                        if (dieValue == 1)
+                        std::cout << "The value shown is " << dieValue << '\n';
+
+                        if (dieValue == 1) {
                                 player.partialScore = 0;
-                        else
+                                std::cout << "Skipping turn\n";
+                        } else {
                                 // once the die has been thrown and its value
                                 // isn't 1, add its value to the partial score
                                 player.partialScore += dieValue;
+                                std::cout << "Added to partial score\n";
+                        }
                 }
                 // considering anything else to mean "Stand"
                 else {
@@ -88,7 +98,19 @@ int main() {
                         player.partialScore = 0;
                 }
 
-                togglePlayer(player);
+                std::cout << "Switching players\n";
+                //fazer isso na verdade só se o cara der stand ou rodar um 1. Resolver isso depois.
+
+                // togglePlayer(player);
+                // delete this switch once togglePlayer is ready
+                switch (player.number) {
+                        case PlayerNumber::ONE:
+                                player.number = PlayerNumber::TWO;
+                                break;
+                        case PlayerNumber::TWO:
+                                player.number = PlayerNumber::ONE;
+                                break;
+                }
         }
 
         return 0;
@@ -106,6 +128,7 @@ std::string getPlayerNumber(Player player) {
         }
 }
 
+#if 0
 void togglePlayer(Player player) {
         // Switches the player types (if it is TWO, then it becomes ONE and vice
         // versa) by using a Switch statement
@@ -118,3 +141,5 @@ void togglePlayer(Player player) {
                         return;
         }
 }
+#endif
+void printWelcome() { std::cout << "\tDice Game\n\n"; }
