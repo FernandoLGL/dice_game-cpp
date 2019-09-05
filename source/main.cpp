@@ -30,7 +30,7 @@ struct Player {
  * @param player current player. Doing this because non-const global variables
  * are evil.
  */
-// void togglePlayer(Player player); //pointers or reference needed
+// void togglePlayer(Player turnPlayer); //pointers or reference needed
 /**
  * A function that gets the PlayerNumber value as a string (instead of values
  * ONE and TWO, we get "ONE" and "TWO")
@@ -43,6 +43,12 @@ std::string getPlayerNumber(Player player);
  * Function that prints the welcome message on the screen
  */
 void printWelcome();
+/**
+ * Function that prints a player's information with a nice format
+ *
+ * @param player the player to print information from
+ */
+void printPlayerInfo(Player player);
 
 int main() {
         // random seed according to system time
@@ -54,20 +60,25 @@ int main() {
         // Variable that will hold the choice for the round (Throw or Stand)
         int choice{0};
         // Initializing both players
-        Player player{};
+        Player player1{PlayerNumber::ONE};
+        Player player2{PlayerNumber::TWO};
+
+        // Player with the turn. At the beginning it is Player ONE
+        Player turnPlayer{player1};
 
         printWelcome();
 
         // The end condition of the while loop is if someone gets the total
         // score to be 100 or higher (which means "continue with the loop until
         // there is a winner")
-        while (player.totalScore < 100) {
-                std::cout << "1 - Throw\n2 - Stand\n";
-                std::cin >> choice;
+        while (player1.totalScore < 100 || player2.totalScore < 100) {
+                // just an extra newline here for more vertical space
+                std::cout << '\n';
 
-                std::cout << "player" << getPlayerNumber(player)
-                          << " (Total: " << player.totalScore
-                          << "; Partial: " << player.partialScore << ")";
+                printPlayerInfo(turnPlayer);
+
+                std::cout << "\n1 - Throw\n2 - Stand\n";
+                std::cin >> choice;
 
                 if (choice == 1) {
                         // once the user chooses to throw a dice, the die value
@@ -77,25 +88,19 @@ int main() {
                         std::cout << "The value shown is " << dieValue << '\n';
 
                         if (dieValue == 1) {
-                                player.partialScore = 0;
+                                turnPlayer.partialScore = 0;
                                 std::cout << "Skipping turn\n";
                                 // Now all we have to do is switch players
-                                // replace this with togglePlayer(player); once
-                                // it is ready to be used
-                                switch (player.number) {
-                                        case PlayerNumber::ONE:
-                                                player.number =
-                                                    PlayerNumber::TWO;
-                                                break;
-                                        case PlayerNumber::TWO:
-                                                player.number =
-                                                    PlayerNumber::ONE;
-                                                break;
-                                }
+                                // replace this with togglePlayer(turnPlayer);
+                                // once it is ready to be used
+                                if (turnPlayer.number == PlayerNumber::ONE)
+                                        turnPlayer = player2;
+                                else
+                                        turnPlayer = player1;
                         } else {
                                 // once the die has been thrown and its value
                                 // isn't 1, add its value to the partial score
-                                player.partialScore += dieValue;
+                                turnPlayer.partialScore += dieValue;
                                 std::cout << "Added to partial score\n";
                         }
                 }
@@ -103,28 +108,21 @@ int main() {
                 else {
                         // if the player stands, then he gets all the score he
                         // gathered by now
-                        player.totalScore += player.partialScore;
-                        // and of course after doing this we have to reset his
+                        turnPlayer.totalScore += turnPlayer.partialScore;
+                        // and of course after doing this we have to reset his partial
                         // score
-                        player.partialScore = 0;
+                        turnPlayer.partialScore = 0;
 
-                        // Now all we have to do is switch players
+                        // Now all we have to do is switch turnPlayers
                         std::cout << "Switching players\n";
-                        // replace this with togglePlayer(player); once it is
-                        // ready to be used
-                        switch (player.number) {
-                                case PlayerNumber::ONE:
-                                        player.number = PlayerNumber::TWO;
-                                        break;
-                                case PlayerNumber::TWO:
-                                        player.number = PlayerNumber::ONE;
-                                        break;
-                        }
+                        // replace this with togglePlayer(turnPlayer); once it
+                        // is ready to be used
+                        if (turnPlayer.number == PlayerNumber::ONE)
+                                turnPlayer = player2;
+                        else
+                                turnPlayer = player1;
                 }
         }
-        // At this point, there is a winner since the while loop condition is
-        // now false.
-        std::cout << "Player" << getPlayerNumber(player) << "wins!";
 
         return 0;
 }
@@ -156,3 +154,8 @@ void togglePlayer(Player player) {
 }
 #endif
 void printWelcome() { std::cout << "\tDice Game\n\n"; }
+void printPlayerInfo(Player player) {
+        std::cout << "player" << getPlayerNumber(player)
+                  << " (Total: " << player.totalScore
+                  << "; Partial: " << player.partialScore << ")";
+}
