@@ -77,6 +77,12 @@ int main() {
                           << ")\n";
                 std::cin >> choice;
 
+                // clearing the state and stream
+                std::cin.clear();
+                // 32767 because that's the largest signed value guaranteed to
+                // fit in a (2-byte) integer on all platforms.
+                std::cin.ignore(32767, '\n');
+
                 system("clear");
 
                 if (choice == 1) {
