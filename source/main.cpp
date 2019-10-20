@@ -72,6 +72,12 @@ int main() {
 
                 printPlayerInfo(turnPlayer);
 
+                // This feels awful
+                if(turnPlayer == &player1)
+                        std::cout << "\nThe other player has " << player2.totalScore << " points.";
+                else
+                        std::cout << "\nThe other player has " << player1.totalScore << " points.";
+
                 std::cout << "\n1 - Throw\n2 - Stand (new total score will be "
                           << turnPlayer->totalScore + turnPlayer->partialScore
                           << ")\n";
